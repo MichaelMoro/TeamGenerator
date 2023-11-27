@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Gestione Spese</title>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+<body>
+
+<div class="container">
+	<h1>Gestione Spese</h1>
+
+    <form id="expense-form">
+    <div class="form-group">
+        <input type="number" id="amount" placeholder="Importo" required>
+    
+        <select id="category" required>
+			<option value="" disabled selected hidden>Categoria</option>
+            <option value="altro">Altro</option>
+            <option value="bar">Bar</option>
+            <option value="casa">Casa</option>
+            <option value="compere">Compere</option>
+            <option value="macchina">Macchina</option>
+            <option value="mangiarefuori">Mangiare fuori</option>
+            <option value="salute">Salute</option>
+            <option value="spesa">Spesa</option>
+            <option value="sport">Sport</option>
+            <option value="svago">Svago</option>
+            <option value="viaggi">Viaggi</option>
+        </select>
+    </div>
+	
+        <label for="description">Descrizione:</label>
+        <input type="text" id="description">
+
+		<button type="button" onclick="addExpense()">Aggiungi Spesa</button>
+	</form>
+	<h3 style="margin-bottom:0">Ultime spese</h3>
+	<div id="expenses-list" class="scrollable-list">
+		<!-- Qui verranno visualizzate le spese aggiunte -->
+	</div>
+
+	<div id="totals">
+		<h3>Categorie</h3>
+		<ul id="category-totals" style="list-style-type: none;">
+			<!-- Qui verranno visualizzati i totali per categoria -->
+		</ul>
+
+		<h3>Totale Mensile: <span id="monthly-total">0.00€</span></h3>
+
+	</div>
+		<div id="grafico" width="300" height="300">
+
+		<canvas id="category-chart" width="300" height="300" style="display: block; box-sizing: border-box; height: 300px; width: 300px;"></canvas>
+		</div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

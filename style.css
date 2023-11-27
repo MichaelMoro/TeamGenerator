@@ -1,0 +1,228 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+.container {
+    max-width: 800px;
+    margin: 50px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-bottom: 8px;
+}
+
+input, select {
+    margin-bottom: 16px;
+    padding: 8px;
+}
+
+button {
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.scrollable-list {
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    padding: 5px;
+    margin-top: 5px;
+}
+
+.expense-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+    padding: 5px;
+    border-radius: 8px;
+}
+
+.delete-button {
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+.delete-button:hover {
+    background-color: #c82333;
+}
+
+#category-totals li {
+    margin-bottom: 10px;
+}
+
+#monthly-total {
+    font-weight: bold;
+    color: #007bff; /* Blu */
+}
+
+body {
+    font-size: 14px;
+}
+
+#expense-form {
+    margin: 0 auto;
+}
+
+
+#expense-form label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+#expense-form input,
+#expense-form select {
+    width: 100%;
+    padding: 12px;
+    box-sizing: border-box;
+    border: 1px solid #ddd; /* Aggiungi un sottile bordo grigio */
+    border-radius: 4px;
+    margin-bottom: 16px;
+    font-size: 16px;
+}
+
+#expense-form button {
+    background-color: #5da8e8; /* Azzurro */
+    color: #fff;
+    padding: 12px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+#expense-form button:hover {
+    background-color: #4a90e2; /* Azzurro più scuro al passaggio del mouse */
+}
+
+#amount,
+#category {
+    width: 50%; /* Dividi lo spazio disponibile in due parti */
+}
+
+#expense-form input:focus,
+#expense-form select:focus {
+    outline: none; /* Rimuovi l'outline al focus */
+    border-color: #3498db; /* Cambia il colore del bordo al focus */
+}
+
+#expense-form {
+    margin: 0 auto;
+}
+
+.form-group {
+    margin-bottom: 5px;
+    display: flex; /* Utilizza Flexbox per allineare gli elementi figli */
+}
+
+#amount,
+#category {
+    flex: 1; /* Fai in modo che ciascun elemento occupi lo stesso spazio disponibile */
+    margin-right: 8px; /* Aggiungi uno spazio tra i due elementi */
+}
+#description {
+    flex: 2; /* Fai in modo che la descrizione occupi più spazio rispetto a Categoria e Importo */
+    margin-bottom: 16px;
+    padding: 8px;
+}
+
+.expense-item.casa {
+    background-color: #8A2BE2; /* Rosso */
+}
+
+.expense-item.bar {
+    background-color: #74b9ff; /* Blu */
+}
+
+.expense-item.viaggi {
+    background-color: #00b894; /* Verde acqua */
+}
+
+.expense-item.spesa {
+    background-color: #fdcb6e; /* Giallo */
+}
+
+.expense-item.sport {
+    background-color: #6c5ce7; /* Viola */
+}
+
+.expense-item.salute {
+    background-color: #ff7675; /* Rosso, lo stesso di casa */
+}
+
+.expense-item.mangiarefuori {
+    background-color: #FFA07A; /* Giallo, lo stesso di spesa */
+}
+
+.expense-item.bar {
+    background-color: #74b9ff; /* Blu, lo stesso di viaggi */
+}
+
+.expense-item.svago {
+    background-color: #20B2AA; /* Verde acqua chiaro */
+}
+
+.expense-item.compere {
+    background-color: #fd79a8; /* Rosa */
+}
+
+.expense-item.altro {
+    background-color: #dfe6e9; /* Grigio chiaro */
+}
+.expense-item.macchina {
+    background-color: #6e6e6e; /* Grigio chiaro */
+}
+
+/* Stile per dispositivi di piccole dimensioni (come smartphone) */
+@media only screen and (max-width: 600px) {
+    .container {
+        max-width: 100%; /* Rendi il contenitore fluido al 100% della larghezza */
+        margin: 20px; /* Aggiungi un po' di spazio ai margini */
+    }
+
+    #amount,
+    #category,
+    #description {
+        width: 100%; /* Occupa l'intera larghezza disponibile */
+        margin-right: 0; /* Non aggiungere margine destro */
+    }
+
+    #expense-form button,
+    #expense-form input,
+    #expense-form select {
+        width: 100%; /* Rendi gli input e le select fluidi al 100% della larghezza */
+    }
+}
+
+#category-chart {
+    width: 200px; /* Imposta la larghezza desiderata */
+    height: 200px; /* Imposta l'altezza desiderata */
+}
+
+#expenses-list {
+    border: none;
+}
