@@ -16,32 +16,10 @@ const categoryColors = {
 	macchina: '#6e6e6e',
 };
 
-
 function capitalizeFirstLetter(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-// Funzione per caricare le spese dal Firebase Realtime Database all'avvio dell'app
-function loadExpensesFromFirebase() {
-    const database = firebase.database();
-    const expensesRef = database.ref('expenses');
-    expensesRef.once('value', (snapshot) => {
-      snapshot.forEach((childSnapshot) => {
-        const expense = childSnapshot.val();
-        expenses.push(expense);
-      });
-
-      // Ordina le spese in base alla data in modo decrescente
-      expenses.sort((a, b) => b.date - a.date);
-
-      // Aggiorna la tua interfaccia dopo aver caricato i dati
-      updateExpensesList();
-      updateTotals();
-    });
-  }
-
-// Chiamare la funzione di caricamento dei dati durante l'inizializzazione
-loadExpensesFromFirebase();
 
 function addExpense() {
     const amountInput = document.getElementById('amount');
@@ -65,10 +43,6 @@ function addExpense() {
     const expense = { amount, category, description, date: new Date() };
     expenses.push(expense);
 
-     // Salva la spesa nel Firebase Realtime Database
-    const database = firebase.database();
-    const expensesRef = database.ref('expenses');
-    expensesRef.push(expense);
 
     // Ordina le spese in base alla data in modo decrescente
     expenses.sort((a, b) => b.date - a.date);
