@@ -21,6 +21,28 @@ function capitalizeFirstLetter(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
+// Funzione per caricare le spese dal Firebase Realtime Database all'avvio dell'app
+function loadExpensesFromFirebase() {
+    const database = firebase.database();
+    const expensesRef = database.ref('expenses');
+    expensesRef.once('value', (snapshot) => {
+      snapshot.forEach((childSnapshot) => {
+        const expense = childSnapshot.val();
+        expenses.push(expense);
+      });
+
+      // Ordina le spese in base alla data in modo decrescente
+      expenses.sort((a, b) => b.date - a.date);
+
+      // Aggiorna la tua interfaccia dopo aver caricato i dati
+      updateExpensesList();
+      updateTotals();
+    });
+  }
+
+// Chiamare la funzione di caricamento dei dati durante l'inizializzazione
+loadExpensesFromFirebase();
+
 function addExpense() {
     const amountInput = document.getElementById('amount');
     const categoryInput = document.getElementById('category');
@@ -34,7 +56,7 @@ function addExpense() {
         alert('Inserisci un importo valido.');
         return;
     }
-	
+
 	if (!category.trim()) {
         alert('Inserisci una categoria.');
         return;
@@ -42,6 +64,11 @@ function addExpense() {
 
     const expense = { amount, category, description, date: new Date() };
     expenses.push(expense);
+
+     // Salva la spesa nel Firebase Realtime Database
+    const database = firebase.database();
+    const expensesRef = database.ref('expenses');
+    expensesRef.push(expense);
 
     // Ordina le spese in base alla data in modo decrescente
     expenses.sort((a, b) => b.date - a.date);
@@ -114,7 +141,7 @@ function updateCategoryTotals() {
         listItem.textContent = `${capitalizeFirstLetter(category)}: ${categoryTotals[category].toFixed(2)}€`;
         categoryTotalsList.appendChild(listItem);
     });
-	
+
 	// Aggiungi questo codice per preparare i dati per il grafico a torta
     const categoryLabels = Object.keys(categoryTotals);
     const categoryData = Object.values(categoryTotals);
@@ -141,7 +168,7 @@ function drawCategoryChart(labels, data) {
 
     // Formatta le etichette con la prima lettera maiuscola
     const formattedLabels = labels.map(label => capitalizeFirstLetter(label));
-	
+
 	// Crea un array di colori basato sulle categorie
     const backgroundColors = formattedLabels.map(label => categoryColors[label.toLowerCase()]);
 
@@ -177,7 +204,7 @@ function drawCategoryChart(labels, data) {
         categoryChart.data.datasets[0].data = data;
         categoryChart.data.datasets[0].backgroundColor = backgroundColors;
         categoryChart.update(); // Aggiorna il grafico
-		
+
     }
 }
 
