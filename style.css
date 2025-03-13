@@ -74,9 +74,10 @@ button:hover {
 #redTeam, #blueTeam {
   list-style-type: none;
   padding: 0;
-  display: grid;
-  grid-template-columns: 1fr 1fr; /* Due colonne per i partecipanti */
+  display: flex;
+  flex-wrap: wrap;  /* Permette di andare a capo se necessario */
   gap: 10px; /* Spaziatura tra i partecipanti */
+  justify-content: space-between;
 }
 
 #redTeam li, #blueTeam li {
@@ -87,6 +88,7 @@ button:hover {
   border: 1px solid #ddd;
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  flex-basis: 48%; /* 2 elementi per riga su desktop e su mobile */
 }
 
 #redTeam li {
@@ -143,9 +145,13 @@ button:hover {
     font-size: 14px;
   }
 
-  /* In dispositivi più piccoli, mettiamo le squadre in una sola colonna */
+  /* Modifica per visualizzare i partecipanti in 2 colonne anche su schermi più piccoli */
   #redTeam, #blueTeam {
-    grid-template-columns: 1fr;  /* Una colonna per dispositivi più piccoli */
+    flex-wrap: wrap;  /* Manteniamo il wrapping per forzare due colonne */
+  }
+
+  #redTeam li, #blueTeam li {
+    flex-basis: 48%;  /* Due elementi per riga anche su mobile */
   }
 }
 
