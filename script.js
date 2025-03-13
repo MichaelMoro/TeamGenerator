@@ -1,189 +1,170 @@
-let expenses = [];
-let monthlyTotal = 0;
-let categoryTotals = {};
+document.addEventListener('DOMContentLoaded', function () {
+    let numParticipants = 0;
+    let participants = [];
+    let redTeam = [];
+    let blueTeam = [];
 
-const categoryColors = {
-    casa: '#8A2BE2',
-    bar: '#74B9FF',
-    viaggi: '#00B894',
-    spesa: '#FDCB6E',
-    sport: '#6C5CE7',
-    salute: '#FF7675',
-    mangiarefuori: '#FFA07A',
-    svago: '#20B2AA',
-    compere: '#81ECEC',
-    altro: '#FD79A8',
-	macchina: '#6e6e6e',
-};
+    const numParticipantsInput = document.getElementById('numParticipants');
+    const participantsInputSection = document.getElementById('participantsInputSection');
+    const generaBtn = document.getElementById('generaBtn');
+    const azzeraBtn = document.getElementById('azzeraBtn');
+    const rigeneraBtn = document.getElementById('rigeneraBtn');
+    const azzeraAllBtn = document.getElementById('azzeraAllBtn');
+    const impostaBtn = document.getElementById('impostaBtn');
+    const participantsLabel = document.getElementById('participantsLabel');
+    const teamsSection = document.getElementById('teamsSection');
+    const redTeamList = document.getElementById('redTeam');
+    const blueTeamList = document.getElementById('blueTeam');
+    const participantsTab = document.getElementById('participantsTab');
+    const loadingSpinner = document.getElementById('loadingSpinner'); // Rotellina di caricamento
 
-function capitalizeFirstLetter(str) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-}
+    impostaBtn.addEventListener('click', setParticipants);
+    generaBtn.addEventListener('click', generateTeams);
+    azzeraBtn.addEventListener('click', resetTeams);
+    rigeneraBtn.addEventListener('click', regenerateTeams);
+    azzeraAllBtn.addEventListener('click', resetAllParticipants);
 
+    function setParticipants() {
+        numParticipants = parseInt(numParticipantsInput.value);
 
-function addExpense() {
-    const amountInput = document.getElementById('amount');
-    const categoryInput = document.getElementById('category');
-    const descriptionInput = document.getElementById('description');
-
-    const amount = parseFloat(amountInput.value);
-    const category = categoryInput.value;
-    const description = descriptionInput.value;
-
-    if (isNaN(amount) || amount <= 0) {
-        alert('Inserisci un importo valido.');
-        return;
-    }
-
-	if (!category.trim()) {
-        alert('Inserisci una categoria.');
-        return;
-    }
-
-    const expense = { amount, category, description, date: new Date() };
-    expenses.push(expense);
-
-
-    // Ordina le spese in base alla data in modo decrescente
-    expenses.sort((a, b) => b.date - a.date);
-
-    updateExpensesList();
-    updateTotals();
-
-	// Reset form
-	amountInput.value = '';
-	categoryInput.value = ''; // Imposta la categoria su un valore vuoto
-	descriptionInput.value = '';
-}
-
-function updateExpensesList() {
-    const expensesList = document.getElementById('expenses-list');
-    expensesList.innerHTML = '';
-
-    expenses.forEach((expense, index) => {
-        const listItem = document.createElement('div');
-        listItem.classList.add('expense-item');
-
-        // Aggiungi una classe specifica per ogni categoria
-        listItem.classList.add(expense.category.toLowerCase());
-
-        const formattedDate = expense.date.toLocaleString(undefined, {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: 'numeric',
-            minute: 'numeric',
-            hour12: false,
-        });
-
-        const formattedCategory = capitalizeFirstLetter(expense.category);
-        listItem.innerHTML = `${formattedDate} - ${formattedCategory} - ${expense.amount}€ - ${expense.description} <button class="delete-button" onclick="deleteExpense(${index})">Elimina</button>`;
-        expensesList.appendChild(listItem);
-    });
-}
-
-
-function deleteExpense(index) {
-    expenses.splice(index, 1);
-    updateExpensesList();
-    updateTotals();
-}
-
-function updateTotals() {
-    updateCategoryTotals();
-    updateMonthlyTotal();
-}
-
-function updateCategoryTotals() {
-    categoryTotals = {};
-
-    expenses.forEach((expense) => {
-        if (!categoryTotals[expense.category]) {
-            categoryTotals[expense.category] = 0;
+        if (numParticipants < 2 || numParticipants > 20) {
+            alert('Il numero dei partecipanti deve essere tra 2 e 20.');
+            return;
         }
-        categoryTotals[expense.category] += expense.amount;
-    });
 
-    const categoryTotalsList = document.getElementById('category-totals');
-    categoryTotalsList.innerHTML = '';
+        participants = [];
+        
+        participantsLabel.classList.add('hidden');
+        numParticipantsInput.classList.add('hidden');
+        impostaBtn.classList.add('hidden');
+        
+        participantsInputSection.innerHTML = '<h2>Inserisci i nomi dei partecipanti</h2>';
 
-    // Ordina le categorie per importo decrescente
-    const sortedCategories = Object.keys(categoryTotals).sort((a, b) => categoryTotals[b] - categoryTotals[a]);
+        for (let i = 0; i < numParticipants; i++) {
+            const inputField = document.createElement('input');
+            inputField.type = 'text';
+            inputField.placeholder = `Partecipante ${i + 1}`;
+            inputField.id = `participant${i}`;
+            participantsInputSection.appendChild(inputField);
+        }
 
-    sortedCategories.forEach((category) => {
-        const listItem = document.createElement('li');
-        listItem.textContent = `${capitalizeFirstLetter(category)}: ${categoryTotals[category].toFixed(2)}€`;
-        categoryTotalsList.appendChild(listItem);
-    });
-
-	// Aggiungi questo codice per preparare i dati per il grafico a torta
-    const categoryLabels = Object.keys(categoryTotals);
-    const categoryData = Object.values(categoryTotals);
-
-    // Chiama una funzione per disegnare il grafico
-    drawCategoryChart(categoryLabels, categoryData);
-}
-
-function updateMonthlyTotal() {
-    monthlyTotal = expenses.reduce((total, expense) => total + expense.amount, 0);
-    const monthlyTotalElement = document.getElementById('monthly-total');
-    monthlyTotalElement.textContent = `${monthlyTotal.toFixed(2)}€`;
-}
-
-let categoryChart; // Dichiarazione della variabile del grafico fuori dalla funzione
-
-// Funzione per formattare il testo delle etichette con la prima lettera maiuscola
-function capitalizeFirstLetter(str) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
-function drawCategoryChart(labels, data) {
-    const ctx = document.getElementById('category-chart').getContext('2d');
-
-    // Formatta le etichette con la prima lettera maiuscola
-    const formattedLabels = labels.map(label => capitalizeFirstLetter(label));
-
-	// Crea un array di colori basato sulle categorie
-    const backgroundColors = formattedLabels.map(label => categoryColors[label.toLowerCase()]);
-
-    // Se il grafico non esiste, crea una nuova istanza
-    if (!categoryChart) {
-        categoryChart = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: formattedLabels,
-                datasets: [{
-                    data: data,
-                    backgroundColor: backgroundColors,
-                }],
-            },
-            options: {
-			responsive: true,
-			maintainAspectRatio: false,
-			aspectRatio: 1,
-			legend: {
-				labels: {
-            generateLabels: function (chart) {
-                const labels = Chart.defaults.global.legend.labels.generateLabels(chart);
-                labels.forEach(label => label.text = capitalizeFirstLetter(label.text));
-                return labels;
-            },
-        },
-    },
-},
-        });
-    } else {
-        // Se il grafico esiste, aggiorna solo i dati
-        categoryChart.data.labels = formattedLabels;
-        categoryChart.data.datasets[0].data = data;
-        categoryChart.data.datasets[0].backgroundColor = backgroundColors;
-        categoryChart.update(); // Aggiorna il grafico
-
+        participantsInputSection.classList.remove('hidden');
+        teamsSection.classList.add('hidden');
+        participantsTab.classList.add('hidden');
+        generaBtn.classList.remove('hidden');
     }
-}
 
+    function generateTeams() {
+        participants = [];
+        for (let i = 0; i < numParticipants; i++) {
+            const participantName = document.getElementById(`participant${i}`).value.trim();
+            if (participantName) {
+                participants.push(participantName);
+            }
+        }
 
+        if (participants.length < 2) {
+            alert('Devi inserire almeno 2 partecipanti.');
+            return;
+        }
 
+        loadingSpinner.classList.remove('hidden'); // Mostra la rotellina
 
+        setTimeout(() => {
+            const shuffledParticipants = shuffle(participants);
+            redTeam = shuffledParticipants.slice(0, Math.ceil(shuffledParticipants.length / 2));
+            blueTeam = shuffledParticipants.slice(Math.ceil(shuffledParticipants.length / 2));
 
+            displayTeams();
 
+            participantsInputSection.classList.add('hidden');
+            participantsTab.classList.remove('hidden');
+            teamsSection.classList.remove('hidden');
+            generaBtn.classList.add('hidden');
+            rigeneraBtn.classList.remove('hidden');
+            azzeraBtn.classList.remove('hidden');
+
+            loadingSpinner.classList.add('hidden'); // Nascondi la rotellina
+        }, 2000); // 2 secondi di caricamento
+    }
+
+    function shuffle(array) {
+        let shuffledArray = array.slice();
+        for (let i = shuffledArray.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+        }
+        return shuffledArray;
+    }
+
+    function displayTeams() {
+        redTeamList.innerHTML = '';
+        blueTeamList.innerHTML = '';
+
+        // Mostra la Squadra Rossa
+        redTeam.forEach((member, index) => {
+            const li = document.createElement('li');
+            if (index === 0) {
+                li.classList.add('first');
+            }
+            li.innerHTML = `${member} ${index === 0 ? '<span class="captain">C</span>' : ''}`;
+            redTeamList.appendChild(li);
+        });
+
+        // Mostra la Squadra Blu
+        blueTeam.forEach((member, index) => {
+            const li = document.createElement('li');
+            if (index === 0) {
+                li.classList.add('first');
+            }
+            li.innerHTML = `${member} ${index === 0 ? '<span class="captain">C</span>' : ''}`;
+            blueTeamList.appendChild(li);
+        });
+    }
+
+    function regenerateTeams() {
+        loadingSpinner.classList.remove('hidden'); // Mostra la rotellina
+
+        setTimeout(() => {
+            const shuffledParticipants = shuffle(participants);
+            redTeam = shuffledParticipants.slice(0, Math.ceil(shuffledParticipants.length / 2));
+            blueTeam = shuffledParticipants.slice(Math.ceil(shuffledParticipants.length / 2));
+
+            displayTeams();
+
+            loadingSpinner.classList.add('hidden'); // Nascondi la rotellina
+        }, 2000); // 2 secondi di caricamento
+    }
+
+    function resetTeams() {
+        redTeam = [];
+        blueTeam = [];
+        participants = [];
+        
+        participantsInputSection.classList.add('hidden');
+        numParticipantsInput.classList.remove('hidden');
+        participantsTab.classList.remove('hidden');
+        participantsLabel.classList.remove('hidden');
+        impostaBtn.classList.remove('hidden');
+        generaBtn.classList.add('hidden');
+        azzeraBtn.classList.add('hidden');
+        rigeneraBtn.classList.add('hidden');
+        teamsSection.classList.add('hidden');
+    }
+
+    function resetAllParticipants() {
+        participants = [];
+        redTeam = [];
+        blueTeam = [];
+
+        participantsInputSection.innerHTML = '';
+        participantsTab.classList.remove('hidden');
+        numParticipantsInput.classList.remove('hidden');
+        participantsInputSection.classList.add('hidden');
+        impostaBtn.classList.remove('hidden');
+        generaBtn.classList.add('hidden');
+        azzeraBtn.classList.add('hidden');
+        rigeneraBtn.classList.add('hidden');
+        teamsSection.classList.add('hidden');
+    }
+});
