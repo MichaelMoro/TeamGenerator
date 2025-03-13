@@ -1,174 +1,170 @@
-/* Reset del margine e padding di base */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+document.addEventListener('DOMContentLoaded', function () {
+    let numParticipants = 0;
+    let participants = [];
+    let redTeam = [];
+    let blueTeam = [];
 
-body {
-  font-family: 'Poppins', sans-serif;
-  background-color: #F8F9FA;
-  color: #2D3748;
-  margin: 0;
-  padding: 0;
-}
+    const numParticipantsInput = document.getElementById('numParticipants');
+    const participantsInputSection = document.getElementById('participantsInputSection');
+    const generaBtn = document.getElementById('generaBtn');
+    const azzeraBtn = document.getElementById('azzeraBtn');
+    const rigeneraBtn = document.getElementById('rigeneraBtn');
+    const azzeraAllBtn = document.getElementById('azzeraAllBtn');
+    const impostaBtn = document.getElementById('impostaBtn');
+    const participantsLabel = document.getElementById('participantsLabel');
+    const teamsSection = document.getElementById('teamsSection');
+    const redTeamList = document.getElementById('redTeam');
+    const blueTeamList = document.getElementById('blueTeam');
+    const participantsTab = document.getElementById('participantsTab');
+    const loadingSpinner = document.getElementById('loadingSpinner'); // Rotellina di caricamento
 
-.container {
-  max-width: 800px;
-  margin: 20px auto;
-  padding: 20px;
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
+    impostaBtn.addEventListener('click', setParticipants);
+    generaBtn.addEventListener('click', generateTeams);
+    azzeraBtn.addEventListener('click', resetTeams);
+    rigeneraBtn.addEventListener('click', regenerateTeams);
+    azzeraAllBtn.addEventListener('click', resetAllParticipants);
 
-h1, h2 {
-  color: #4A6FA5;
-  margin-bottom: 10px;
-  font-weight: 600;
-  font-size: 24px;
-  text-align: center;
-}
+    function setParticipants() {
+        numParticipants = parseInt(numParticipantsInput.value);
 
-h2 {
-  margin-top: 20px;
-  font-size: 20px;
-  color: #2D3748;
-}
+        if (numParticipants < 2 || numParticipants > 20) {
+            alert('Il numero dei partecipanti deve essere tra 2 e 20.');
+            return;
+        }
 
-label {
-  font-size: 16px;
-  margin-bottom: 8px;
-  font-weight: 500;
-}
+        participants = [];
+        
+        participantsLabel.classList.add('hidden');
+        numParticipantsInput.classList.add('hidden');
+        impostaBtn.classList.add('hidden');
+        
+        participantsInputSection.innerHTML = '<h2>Inserisci i nomi dei partecipanti</h2>';
 
-input[type="number"], input[type="text"] {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
-}
+        for (let i = 0; i < numParticipants; i++) {
+            const inputField = document.createElement('input');
+            inputField.type = 'text';
+            inputField.placeholder = `Partecipante ${i + 1}`;
+            inputField.id = `participant${i}`;
+            participantsInputSection.appendChild(inputField);
+        }
 
-button {
-  padding: 12px 15px;
-  background-color: #4A6FA5;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 10px;
-  font-weight: 600;
-  font-size: 16px;
-}
+        participantsInputSection.classList.remove('hidden');
+        teamsSection.classList.add('hidden');
+        participantsTab.classList.add('hidden');
+        generaBtn.classList.remove('hidden');
+    }
 
-button:hover {
-  background-color: #355d8c;
-}
+    function generateTeams() {
+        participants = [];
+        for (let i = 0; i < numParticipants; i++) {
+            const participantName = document.getElementById(`participant${i}`).value.trim();
+            if (participantName) {
+                participants.push(participantName);
+            }
+        }
 
-.hidden {
-  display: none;
-}
+        if (participants.length < 2) {
+            alert('Devi inserire almeno 2 partecipanti.');
+            return;
+        }
 
-#redTeam, #blueTeam {
-  list-style-type: none;
-  padding: 0;
-}
+        loadingSpinner.classList.remove('hidden'); // Mostra la rotellina
 
-#redTeam li, #blueTeam li {
-  display: flex;
-  justify-content: space-between; /* Aggiunto per separare il nome dalla "C" */
-  background-color: #fff;
-  padding: 8px;
-  border: 1px solid #ddd;
-  margin-bottom: 5px;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
+        setTimeout(() => {
+            const shuffledParticipants = shuffle(participants);
+            redTeam = shuffledParticipants.slice(0, Math.ceil(shuffledParticipants.length / 2));
+            blueTeam = shuffledParticipants.slice(Math.ceil(shuffledParticipants.length / 2));
 
-#redTeam li {
-  background-color: #E74C3C;
-  color: white;
-}
+            displayTeams();
 
-#blueTeam li {
-  background-color: #3498DB;
-  color: white;
-}
+            participantsInputSection.classList.add('hidden');
+            participantsTab.classList.remove('hidden');
+            teamsSection.classList.remove('hidden');
+            generaBtn.classList.add('hidden');
+            rigeneraBtn.classList.remove('hidden');
+            azzeraBtn.classList.remove('hidden');
 
-#redTeam li.first, #blueTeam li.first {
-  font-weight: bold;
-}
+            loadingSpinner.classList.add('hidden'); // Nascondi la rotellina
+        }, 2000); // 2 secondi di caricamento
+    }
 
-#redTeam li .captain, #blueTeam li .captain {
-  font-size: 16px;
-  background-color: #F39C12;
-  color: white;
-  padding: 3px 8px;
-  border-radius: 50%;
-  font-weight: bold;
-  margin-left: 10px;
-  align-self: center; /* Aggiunto per allineare verticalmente la "C" */
-}
+    function shuffle(array) {
+        let shuffledArray = array.slice();
+        for (let i = shuffledArray.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+        }
+        return shuffledArray;
+    }
 
-.tab {
-  margin-bottom: 30px;
-}
+    function displayTeams() {
+        redTeamList.innerHTML = '';
+        blueTeamList.innerHTML = '';
 
-@media (max-width: 768px) {
-  .container {
-    margin: 10px;
-    padding: 15px;
-  }
+        // Mostra la Squadra Rossa
+        redTeam.forEach((member, index) => {
+            const li = document.createElement('li');
+            if (index === 0) {
+                li.classList.add('first');
+            }
+            li.innerHTML = `${member} ${index === 0 ? '<span class="captain">C</span>' : ''}`;
+            redTeamList.appendChild(li);
+        });
 
-  button {
-    width: 100%;
-    padding: 12px;
-  }
+        // Mostra la Squadra Blu
+        blueTeam.forEach((member, index) => {
+            const li = document.createElement('li');
+            if (index === 0) {
+                li.classList.add('first');
+            }
+            li.innerHTML = `${member} ${index === 0 ? '<span class="captain">C</span>' : ''}`;
+            blueTeamList.appendChild(li);
+        });
+    }
 
-  input[type="number"], input[type="text"] {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-  }
+    function regenerateTeams() {
+        loadingSpinner.classList.remove('hidden'); // Mostra la rotellina
 
-  h1, h2 {
-    font-size: 20px;
-  }
+        setTimeout(() => {
+            const shuffledParticipants = shuffle(participants);
+            redTeam = shuffledParticipants.slice(0, Math.ceil(shuffledParticipants.length / 2));
+            blueTeam = shuffledParticipants.slice(Math.ceil(shuffledParticipants.length / 2));
 
-  label {
-    font-size: 14px;
-  }
-}
+            displayTeams();
 
-@media (max-width: 480px) {
-  h1 {
-    font-size: 18px;
-  }
+            loadingSpinner.classList.add('hidden'); // Nascondi la rotellina
+        }, 2000); // 2 secondi di caricamento
+    }
 
-  .container {
-    padding: 10px;
-    margin: 10px;
-  }
-}
+    function resetTeams() {
+        redTeam = [];
+        blueTeam = [];
+        participants = [];
+        
+        participantsInputSection.classList.add('hidden');
+        numParticipantsInput.classList.remove('hidden');
+        participantsTab.classList.remove('hidden');
+        participantsLabel.classList.remove('hidden');
+        impostaBtn.classList.remove('hidden');
+        generaBtn.classList.add('hidden');
+        azzeraBtn.classList.add('hidden');
+        rigeneraBtn.classList.add('hidden');
+        teamsSection.classList.add('hidden');
+    }
 
-/* Animazione della rotellina di caricamento */
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
+    function resetAllParticipants() {
+        participants = [];
+        redTeam = [];
+        blueTeam = [];
 
-.loader {
-  border: 4px solid #f3f3f3; /* Grigio chiaro */
-  border-top: 4px solid #3498db; /* Colore del bordo superiore */
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: spin 1s linear infinite;
-  margin: auto;
-}
-
-.hidden {
-  display: none;
-}
+        participantsInputSection.innerHTML = '';
+        participantsTab.classList.remove('hidden');
+        numParticipantsInput.classList.remove('hidden');
+        participantsInputSection.classList.add('hidden');
+        impostaBtn.classList.remove('hidden');
+        generaBtn.classList.add('hidden');
+        azzeraBtn.classList.add('hidden');
+        rigeneraBtn.classList.add('hidden');
+        teamsSection.classList.add('hidden');
+    }
+});
