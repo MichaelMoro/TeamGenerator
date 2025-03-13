@@ -1,67 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>Gestione Spese</title>
-	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-	<script type="module" src="script.js">
-
-	  </script>
+    <title>Generatore di Squadre</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div class="container">
+        <!-- Tab 1: Generatore di Squadre -->
+        <div id="participantsTab">
+            <h1>Generatore di Squadre</h1>
+            <div id="participantsLabel">
+                <label for="numParticipants">Numero di partecipanti (max 20):</label>
+            </div>
+            <input type="number" id="numParticipants" min="2" max="20">
+            <button id="impostaBtn">Imposta</button>
+        </div>
 
-<div class="container">
-	<h1>Gestione Spese</h1>
+        <!-- Sezione per inserire i nomi -->
+        <div id="participantsInputSection" class="hidden">
+            <h2>Inserisci i nomi dei partecipanti</h2>
+        </div>
+		
 
-    <form id="expense-form">
-    <div class="form-group">
-        <input type="number" id="amount" placeholder="Importo" required>
+        <!-- Sezione Squadre -->
+        <div id="teamsSection" class="hidden">
+            <h2>Squadra Rossa</h2>
+            <ul id="redTeam"></ul>
+            <h2>Squadra Blu</h2>
+            <ul id="blueTeam"></ul>
+        </div>
 
-        <select id="category" required>
-			<option value="" disabled selected hidden>Categoria</option>
-            <option value="altro">Altro</option>
-            <option value="bar">Bar</option>
-            <option value="casa">Casa</option>
-            <option value="compere">Compere</option>
-            <option value="macchina">Macchina</option>
-            <option value="mangiarefuori">Mangiare fuori</option>
-            <option value="salute">Salute</option>
-            <option value="spesa">Spesa</option>
-            <option value="sport">Sport</option>
-            <option value="svago">Svago</option>
-            <option value="viaggi">Viaggi</option>
-        </select>
+		<div id="loadingSpinner" class="loader hidden"></div>
+
+        <!-- Bottoni -->
+        <div id="buttonsSection">
+            <button id="generaBtn" class="hidden">Genera Squadre</button>
+            <button id="azzeraBtn" class="hidden">Azzera</button>
+            <button id="rigeneraBtn" class="hidden">Rigenera</button>
+            <button id="azzeraAllBtn" class="hidden">Azzera Tutti</button>
+        </div>
     </div>
-
-        <label for="description">Descrizione:</label>
-        <input type="text" id="description">
-
-		<button type="button" onclick="addExpense()">Aggiungi Spesa</button>
-	</form>
-	<h3 style="margin-bottom:0">Ultime spese</h3>
-	<div id="expenses-list" class="scrollable-list">
-		<!-- Qui verranno visualizzate le spese aggiunte -->
-	</div>
-
-	<div id="totals">
-		<h3>Categorie</h3>
-		<ul id="category-totals" style="list-style-type: none;">
-			<!-- Qui verranno visualizzati i totali per categoria -->
-		</ul>
-
-		<h3>Totale Mensile: <span id="monthly-total">0.00€</span></h3>
-
-	</div>
-		<div id="grafico" width="300" height="300">
-
-		<canvas id="category-chart" width="300" height="300" style="display: block; box-sizing: border-box; height: 300px; width: 300px;"></canvas>
-		</div>
-
-</div>
-
-<script src="script.js"></script>
+    
+    <script src="app.js"></script>
+	
 </body>
 </html>
