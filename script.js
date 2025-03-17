@@ -97,30 +97,47 @@ document.addEventListener('DOMContentLoaded', function () {
         return shuffledArray;
     }
 
-    function displayTeams() {
-        redTeamList.innerHTML = '';
-        blueTeamList.innerHTML = '';
+function displayTeams() {
+  redTeamList.innerHTML = '';
+  blueTeamList.innerHTML = '';
 
-        // Mostra la Squadra Rossa
-        redTeam.forEach((member, index) => {
-            const li = document.createElement('li');
-            if (index === 0) {
-                li.classList.add('first');
-            }
-            li.innerHTML = `${member} ${index === 0 ? '<span class="captain">C</span>' : ''}`;
-            redTeamList.appendChild(li);
-        });
-
-        // Mostra la Squadra Blu
-        blueTeam.forEach((member, index) => {
-            const li = document.createElement('li');
-            if (index === 0) {
-                li.classList.add('first');
-            }
-            li.innerHTML = `${member} ${index === 0 ? '<span class="captain">C</span>' : ''}`;
-            blueTeamList.appendChild(li);
-        });
+  // Mostra la Squadra Rossa
+  redTeam.forEach((member, index) => {
+    const li = document.createElement('li');
+    if (index === 0) {
+      li.classList.add('first');
     }
+    li.innerHTML = `${member} ${index === 0 ? '<span class="captain">C</span>' : ''}`;
+    li.style.backgroundColor = "#E74C3C"; // Colore Rosso per la squadra Rossa
+    li.style.color = "white"; // Colore del testo bianco
+    redTeamList.appendChild(li);
+
+    // Aggiungi la classe 'show' con ritardo
+    setTimeout(() => {
+      li.classList.add('show'); // Applica la classe 'show' per farlo apparire
+    }, index * 1000); // Ritardo di 1 secondo per ogni elemento
+  });
+
+  // Mostra la Squadra Blu
+  blueTeam.forEach((member, index) => {
+    const li = document.createElement('li');
+    if (index === 0) {
+      li.classList.add('first');
+    }
+    li.innerHTML = `${member} ${index === 0 ? '<span class="captain">C</span>' : ''}`;
+    li.style.backgroundColor = "#3498DB"; // Colore Blu per la squadra Blu
+    li.style.color = "white"; // Colore del testo bianco
+    blueTeamList.appendChild(li);
+
+    // Aggiungi la classe 'show' con ritardo
+    setTimeout(() => {
+      li.classList.add('show'); // Applica la classe 'show' per farlo apparire
+    }, index * 1000); // Ritardo di 1 secondo per ogni elemento
+  });
+}
+
+
+
 
     function regenerateTeams() {
         loadingSpinner.classList.remove('hidden'); // Mostra la rotellina
