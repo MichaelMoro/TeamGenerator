@@ -185,3 +185,47 @@ button:hover {
 .hidden {
   display: none;
 }
+
+
+/* Nascondere inizialmente gli elementi */
+#redTeam li, #blueTeam li {
+  display: none; /* Inizialmente nascosto */
+  background-color: #fff;
+  padding: 8px;
+  border: 1px solid #ddd;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  opacity: 0; /* Impostiamo l'opacità a 0 per renderli invisibili */
+  transition: opacity 0.5s ease-in-out;
+}
+
+#redTeam li.show, #blueTeam li.show {
+  display: block; /* Diventano visibili */
+  opacity: 1; /* L'opacità va a 1 per renderli visibili */
+}
+
+#redTeam li.first, #blueTeam li.first {
+  font-weight: bold;
+}
+
+#redTeam li .captain, #blueTeam li .captain {
+  font-size: 16px;
+  background-color: #F39C12;
+  color: white;
+  padding: 3px 8px;
+  border-radius: 50%;
+  font-weight: bold;
+  margin-left: 10px;
+  align-self: center; /* Aggiunto per allineare verticalmente la "C" */
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
