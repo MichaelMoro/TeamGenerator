@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let participants = [];
     let redTeam = [];
     let blueTeam = [];
+	let ricalcoliCount = 0;
 
     const numParticipantsInput = document.getElementById('numParticipants');
     const participantsInputSection = document.getElementById('participantsInputSection');
@@ -17,7 +18,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const blueTeamList = document.getElementById('blueTeam');
     const participantsTab = document.getElementById('participantsTab');
     const loadingSpinner = document.getElementById('loadingSpinner'); // Rotellina di caricamento
-
+	const ricalcoliValue = document.getElementById('ricalcoliValue');
+	const ricalcoliCounter = document.getElementById('ricalcoliCounter');
+	
     impostaBtn.addEventListener('click', setParticipants);
     generaBtn.addEventListener('click', generateTeams);
     azzeraBtn.addEventListener('click', resetTeams);
@@ -139,49 +142,87 @@ function displayTeams() {
 
 
 
-    function regenerateTeams() {
-        loadingSpinner.classList.remove('hidden'); // Mostra la rotellina
+	function regenerateTeams() {
+		loadingSpinner.classList.remove('hidden'); // Mostra la rotellina
 
-        setTimeout(() => {
-            const shuffledParticipants = shuffle(participants);
-            redTeam = shuffledParticipants.slice(0, Math.ceil(shuffledParticipants.length / 2));
-            blueTeam = shuffledParticipants.slice(Math.ceil(shuffledParticipants.length / 2));
+		setTimeout(() => {
+			const shuffledParticipants = shuffle(participants);
+			redTeam = shuffledParticipants.slice(0, Math.ceil(shuffledParticipants.length / 2));
+			blueTeam = shuffledParticipants.slice(Math.ceil(shuffledParticipants.length / 2));
 
-            displayTeams();
+			displayTeams();
 
-            loadingSpinner.classList.add('hidden'); // Nascondi la rotellina
-        }, 2000); // 2 secondi di caricamento
-    }
+			// Incrementa il contatore dei ricalcoli
+			ricalcoliCount++;
+			ricalcoliValue.textContent = ricalcoliCount;
+			ricalcoliCounter.classList.remove('hidden'); // Mostra il contatore
 
-    function resetTeams() {
-        redTeam = [];
-        blueTeam = [];
-        participants = [];
-        
-        participantsInputSection.classList.add('hidden');
-        numParticipantsInput.classList.remove('hidden');
-        participantsTab.classList.remove('hidden');
-        participantsLabel.classList.remove('hidden');
-        impostaBtn.classList.remove('hidden');
-        generaBtn.classList.add('hidden');
-        azzeraBtn.classList.add('hidden');
-        rigeneraBtn.classList.add('hidden');
-        teamsSection.classList.add('hidden');
-    }
+			loadingSpinner.classList.add('hidden'); // Nascondi la rotellina
+		}, 2000); // 2 secondi di caricamento
+	}
 
-    function resetAllParticipants() {
-        participants = [];
-        redTeam = [];
-        blueTeam = [];
 
-        participantsInputSection.innerHTML = '';
-        participantsTab.classList.remove('hidden');
-        numParticipantsInput.classList.remove('hidden');
-        participantsInputSection.classList.add('hidden');
-        impostaBtn.classList.remove('hidden');
-        generaBtn.classList.add('hidden');
-        azzeraBtn.classList.add('hidden');
-        rigeneraBtn.classList.add('hidden');
-        teamsSection.classList.add('hidden');
-    }
+	function resetTeams() {
+		redTeam = [];
+		blueTeam = [];
+		participants = [];
+		
+		participantsInputSection.classList.add('hidden');
+		numParticipantsInput.classList.remove('hidden');
+		participantsTab.classList.remove('hidden');
+		participantsLabel.classList.remove('hidden');
+		impostaBtn.classList.remove('hidden');
+		generaBtn.classList.add('hidden');
+		azzeraBtn.classList.add('hidden');
+		rigeneraBtn.classList.add('hidden');
+		teamsSection.classList.add('hidden');
+
+		// Resetta il contatore dei ricalcoli
+		ricalcoliCount = 0;
+		ricalcoliValue.textContent = ricalcoliCount;
+		ricalcoliCounter.classList.add('hidden'); // Nascondi il contatore
+	}
+	function resetTeams() {
+		redTeam = [];
+		blueTeam = [];
+		participants = [];
+		
+		participantsInputSection.classList.add('hidden');
+		numParticipantsInput.classList.remove('hidden');
+		participantsTab.classList.remove('hidden');
+		participantsLabel.classList.remove('hidden');
+		impostaBtn.classList.remove('hidden');
+		generaBtn.classList.add('hidden');
+		azzeraBtn.classList.add('hidden');
+		rigeneraBtn.classList.add('hidden');
+		teamsSection.classList.add('hidden');
+
+		// Resetta il contatore dei ricalcoli
+		ricalcoliCount = 0;
+		ricalcoliValue.textContent = ricalcoliCount;
+		ricalcoliCounter.classList.add('hidden'); // Nascondi il contatore
+	}
+
+
+	function resetAllParticipants() {
+		participants = [];
+		redTeam = [];
+		blueTeam = [];
+
+		participantsInputSection.innerHTML = '';
+		participantsTab.classList.remove('hidden');
+		numParticipantsInput.classList.remove('hidden');
+		participantsInputSection.classList.add('hidden');
+		impostaBtn.classList.remove('hidden');
+		generaBtn.classList.add('hidden');
+		azzeraBtn.classList.add('hidden');
+		rigeneraBtn.classList.add('hidden');
+		teamsSection.classList.add('hidden');
+
+		// Resetta il contatore dei ricalcoli
+		ricalcoliCount = 0;
+		ricalcoliValue.textContent = ricalcoliCount;
+		ricalcoliCounter.classList.add('hidden'); // Nascondi il contatore
+	}
+
 });
